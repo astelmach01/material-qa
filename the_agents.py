@@ -4,7 +4,7 @@ from agents import Agent
 from typing import List
 from pydantic import BaseModel, Field
 
-from utils import hydrated_markdown_section_contents
+from file_utils import hydrated_markdown_section_contents
 
 ROOT_DIR = Path(__file__).parent
 PROMPT_DIR = ROOT_DIR / "prompts"

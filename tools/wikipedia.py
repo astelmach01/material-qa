@@ -7,6 +7,9 @@ class WikipediaArticleResponse(BaseModel):
     last_edit: str
     text: str
 
+    def __str__(self):
+        return f"WikipediaArticleResponse(title='{self.title}', last_edit='{self.last_edit}')"
+
 async def get_wikipedia_page(query) -> WikipediaArticleResponse | str:
     """
     Fetches a Wikipedia article, returning a Pydantic model on success,

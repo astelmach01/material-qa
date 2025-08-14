@@ -27,3 +27,14 @@ To run the main application:
 ```bash
 python main.py
 ```
+
+### Environment Variables
+
+This project requires an API key for Anthropic.
+
+1.  Create a `.env` file in the root of the project.
+2.  Add the following line to the `.env` file, replacing the placeholder with your actual API key:
+
+```
+ANTHROPIC_API_KEY="your_anthropic_api_key"
+```
