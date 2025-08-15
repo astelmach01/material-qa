@@ -76,4 +76,13 @@ body {
     margin-bottom: 10px;
     font-size: 0.9em;
     color: #555;
+    text-decoration: none;
+    display: inline-block;
+    margin-right: 10px;
+    border: 1px solid #eee;
+}
+
+.article:hover {
+    background-color: #f0f0f0;
+    border-color: #ddd;
 }

@@ -55,9 +55,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const articlesElement = document.createElement('div');
             articlesElement.classList.add('articles');
             data.articles.forEach(article => {
-                const articleElement = document.createElement('div');
+                const articleElement = document.createElement('a');
                 articleElement.classList.add('article');
-                articleElement.innerHTML = article.replace(/\n/g, '<br>');
+                articleElement.href = article.url;
+                articleElement.target = '_blank';
+                articleElement.textContent = article.title;
                 articlesElement.appendChild(articleElement);
             });
             messageElement.appendChild(articlesElement);

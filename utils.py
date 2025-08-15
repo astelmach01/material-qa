@@ -24,12 +24,16 @@ def format_pruned_articles(pruned_articles: list) -> list:
     Returns:
         A list of formatted strings.
     """
-    return [
-        f"Title: {article.title}\n"
-        f"Last Edit: {article.last_edit}\n"
-        f"Content: {article.cleaned_article_text}\n"
-        for article in pruned_articles
-    ]
+    formatted_articles = []
+    for article in pruned_articles:
+        formatted_articles.append(
+            {
+                "title": article.title,
+                "url": f"https://en.wikipedia.org/wiki/{article.title.replace(' ', '_')}",
+                "content": article.cleaned_article_text,
+            }
+        )
+    return formatted_articles
 
 
 async def run_final_synthesizer(query: str, formatted_articles: list, user_id: str):
@@ -50,7 +54,7 @@ async def run_final_synthesizer(query: str, formatted_articles: list, user_id: s
         PROMPT_DIR / "final_synthesizer_agent.md",
         "Step 1",
         query=query,
-        formatted_articles=formatted_articles,
+        formatted_articles=[article["content"] for article in formatted_articles],
     )
 
     final_response = await Runner.run(
