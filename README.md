@@ -7,7 +7,6 @@ This project uses AI agents to answer questions based on provided materials.
 ### Prerequisites
 
 1. **Install `uv`**: Follow the instructions at [https://docs.astral.sh/uv/getting-started/installation/](https://docs.astral.sh/uv/getting-started/installation/) to install `uv`.
-2. **Install Python 3.11**: Make sure you have Python 3.11 installed. You can use a tool like `pyenv` to manage Python versions.
 
 ### Installation
 
