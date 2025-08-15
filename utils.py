@@ -46,21 +46,15 @@ async def run_final_synthesizer(query: str, formatted_articles: list, user_id: s
     """
     session = SQLiteSession(session_id=user_id)
 
-    # Store the formatted articles in the session
-    await session.add_items(
-        [
-            {
-                "role": "tool_output",
-                "content": {
-                    "type": "wikipedia_articles",
-                    "articles": formatted_articles,
-                },
-            }
-        ]
+    final_input = hydrated_markdown_section_contents(
+        PROMPT_DIR / "final_synthesizer_agent.md",
+        "Step 1",
+        query=query,
+        formatted_articles=formatted_articles,
     )
 
     final_response = await Runner.run(
-        final_synthesizer_agent, input=query, session=session
+        final_synthesizer_agent, input=final_input, session=session
     )
 
     assert isinstance(final_response.final_output, FinalUserResponse)
