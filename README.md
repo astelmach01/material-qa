@@ -28,7 +28,7 @@ This project uses AI agents to answer questions based on provided materials.
 To run the main application:
 
 ```bash
-python main.py
+uvicorn server:app --reload
 ```
 
 ### Environment Variables
