@@ -1,17 +1,18 @@
 import asyncio
 
 from agents import Runner, SQLiteSession
+
+from file_utils import hydrated_markdown_section_contents
 from the_agents import (
-    final_synthesizer_agent,
-    FinalUserResponse,
-    article_pruner_agent,
-    PrunedWikipediaArticle,
-    query_agent,
-    WikipediaQuery,
     PROMPT_DIR,
+    FinalUserResponse,
+    PrunedWikipediaArticle,
+    WikipediaQuery,
+    article_pruner_agent,
+    final_synthesizer_agent,
+    query_agent,
 )
 from tools.wikipedia import get_wikipedia_page
-from file_utils import hydrated_markdown_section_contents
 
 
 def format_pruned_articles(pruned_articles: list) -> list:

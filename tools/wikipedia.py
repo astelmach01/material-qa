@@ -1,6 +1,6 @@
 import aiohttp
-import asyncio
 from pydantic import BaseModel
+
 
 class WikipediaArticleResponse(BaseModel):
     title: str
@@ -9,6 +9,7 @@ class WikipediaArticleResponse(BaseModel):
 
     def __str__(self):
         return f"WikipediaArticleResponse(title='{self.title}', last_edit='{self.last_edit}')"
+
 
 async def get_wikipedia_page(query) -> WikipediaArticleResponse | str:
     """
@@ -24,7 +25,7 @@ async def get_wikipedia_page(query) -> WikipediaArticleResponse | str:
                 "action": "query",
                 "list": "search",
                 "srsearch": query,
-                "format": "json"
+                "format": "json",
             }
             async with session.get(base_url, params=search_params) as resp:
                 resp.raise_for_status()
@@ -45,7 +46,7 @@ async def get_wikipedia_page(query) -> WikipediaArticleResponse | str:
                 "prop": "extracts",
                 "explaintext": "",
                 "titles": title,
-                "format": "json"
+                "format": "json",
             }
             async with session.get(base_url, params=page_params) as resp:
                 resp.raise_for_status()
@@ -58,9 +59,7 @@ async def get_wikipedia_page(query) -> WikipediaArticleResponse | str:
                 return f"Error: Found page '{title}' but it has no text content."
 
             return WikipediaArticleResponse(
-                title=title,
-                last_edit=last_edit,
-                text=page_text
+                title=title, last_edit=last_edit, text=page_text
             )
     except Exception as e:
         return f"An unexpected error occurred: {e}"

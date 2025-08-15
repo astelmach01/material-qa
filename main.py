@@ -1,9 +1,9 @@
 import asyncio
 
 from utils import (
+    format_pruned_articles,
     get_wikipedia_articles,
     prune_articles,
-    format_pruned_articles,
     run_final_synthesizer,
 )
 

@@ -1,7 +1,7 @@
 from pathlib import Path
+from typing import List
 
 from agents import Agent
-from typing import List
 from pydantic import BaseModel, Field
 
 from file_utils import hydrated_markdown_section_contents
