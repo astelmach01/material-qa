@@ -8,6 +8,8 @@ from main import run_query
 
 app = FastAPI()
 
+DB_PATH = "conversation_history.db"
+
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
 
@@ -23,13 +25,14 @@ async def read_index():
 
 @app.post("/query")
 async def query_endpoint(query: Query):
-    response = await run_query(query.query, query.user_id)
+    session = SQLiteSession(query.user_id, DB_PATH)
+    response = await run_query(query.query, session)
     return response
 
 
 @app.get("/articles/{user_id}")
 async def get_articles_endpoint(user_id: str):
-    session = SQLiteSession(session_id=user_id)
+    session = SQLiteSession(session_id=user_id, db_path=DB_PATH)
     items = await session.get_items()
     articles = []
     for item in items:
@@ -46,7 +49,7 @@ async def session_has_articles(user_id: str):
     """
     Checks if a session has articles.
     """
-    session = SQLiteSession(session_id=user_id)
+    session = SQLiteSession(session_id=user_id, db_path=DB_PATH)
     items = await session.get_items()
     for item in items:
         if (

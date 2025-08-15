@@ -4,9 +4,9 @@ from typing import List
 from agents import Agent
 from pydantic import BaseModel, Field
 
-from file_utils import hydrated_markdown_section_contents
+from .file_utils import hydrated_markdown_section_contents
 
-ROOT_DIR = Path(__file__).parent
+ROOT_DIR = Path(__file__).parent.parent  # Go up one level from src to project root
 PROMPT_DIR = ROOT_DIR / "prompts"
 
 HAIKU = "litellm/anthropic/claude-3-5-haiku-20241022"

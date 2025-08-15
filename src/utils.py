@@ -1,9 +1,9 @@
 import asyncio
 
-from agents import Runner, SQLiteSession
+from agents import Runner, SQLiteSession, Session
 
-from file_utils import hydrated_markdown_section_contents
-from the_agents import (
+from .file_utils import hydrated_markdown_section_contents
+from .the_agents import (
     PROMPT_DIR,
     FinalUserResponse,
     PrunedWikipediaArticle,
@@ -12,7 +12,7 @@ from the_agents import (
     final_synthesizer_agent,
     query_agent,
 )
-from tools.wikipedia import get_wikipedia_page
+from .tools.wikipedia import get_wikipedia_page
 
 
 def format_pruned_articles(pruned_articles: list) -> list:
@@ -37,7 +37,7 @@ def format_pruned_articles(pruned_articles: list) -> list:
     return formatted_articles
 
 
-async def run_final_synthesizer(query: str, formatted_articles: list, user_id: str):
+async def run_final_synthesizer(query: str, formatted_articles: list, session: Session):
     """
     Runs the final synthesizer agent.
 
@@ -49,7 +49,7 @@ async def run_final_synthesizer(query: str, formatted_articles: list, user_id: s
     Returns:
         The final answer to the user's query.
     """
-    session = SQLiteSession(session_id=user_id)
+    print(f"Running final synthesizer for session: {session.session_id}")
 
     final_input = hydrated_markdown_section_contents(
         PROMPT_DIR / "final_synthesizer_agent.md",
@@ -67,7 +67,7 @@ async def run_final_synthesizer(query: str, formatted_articles: list, user_id: s
     return final_response.final_output.answer
 
 
-async def prune_articles(articles: list, query: str) -> list:
+async def prune_articles(articles: list, query: str, session: Session) -> list:
     """
     Prunes a list of Wikipedia articles using the article pruner agent.
 
@@ -78,6 +78,7 @@ async def prune_articles(articles: list, query: str) -> list:
     Returns:
         A list of pruned articles.
     """
+    print(f"Pruning articles for session: {session.session_id}")
     pruner_tasks = []
     seen_articles = set()
     for article in articles:
@@ -96,7 +97,9 @@ async def prune_articles(articles: list, query: str) -> list:
                 article=article,
                 question=query,
             )
-            pruner_tasks.append(Runner.run(article_pruner_agent, input=pruner_input))
+            pruner_tasks.append(
+                Runner.run(article_pruner_agent, input=pruner_input, session=session)
+            )
 
     pruned_articles = await asyncio.gather(*pruner_tasks)
     pruned_articles = [res.final_output for res in pruned_articles]
@@ -106,7 +109,7 @@ async def prune_articles(articles: list, query: str) -> list:
     return pruned_articles
 
 
-async def get_wikipedia_articles(query: str) -> list:
+async def get_wikipedia_articles(query: str, session: Session) -> list:
     """
     Gets a list of Wikipedia articles based on a query.
 
@@ -116,11 +119,12 @@ async def get_wikipedia_articles(query: str) -> list:
     Returns:
         A list of Wikipedia articles.
     """
+    print(f"Getting Wikipedia articles for session: {session.session_id}")
     first_input = hydrated_markdown_section_contents(
         PROMPT_DIR / "query_agent.md", "Step 1", query=query
     )
 
-    queries_articles = await Runner.run(query_agent, input=first_input)
+    queries_articles = await Runner.run(query_agent, input=first_input, session=session)
     assert isinstance(queries_articles.final_output, WikipediaQuery)
 
     wikipedia_tasks = []
